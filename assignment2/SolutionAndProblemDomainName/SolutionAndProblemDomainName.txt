@@ -1,0 +1,27 @@
+Solution Domain Name : 
+ManageUserSession
+DoLogin
+getUsers
+getCart
+getOrders
+DoLogout
+getTaskById
+UpdateToken
+getUserData
+useToast
+
+
+Problem Domain Name: 
+RefreshUser
+ValidateInfo
+IsValid
+isLoggedIn
+MenuItemData
+OrderInfo
+toasterSuccess
+toasterFail
+handleModal
+setHandleModal
+
+
+
