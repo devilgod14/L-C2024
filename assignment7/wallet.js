@@ -5,19 +5,19 @@ class Wallet {
       this.#value = 0;
     }
   
-    getTotalMoney() {
+    getBalane() {
       return this.#value;
     }
   
-    setTotalMoney(newValue) {
+    setBalance(newValue) {
       this.#value = newValue;
     }
   
-    addMoney(deposit) {
+    creditMoney(deposit) {
       this.#value += deposit;
     }
   
-    subtractMoney(debit) {
+    debitMoney(debit) {
       if (debit <= this.#value) {
         this.#value -= debit;
         return true; 

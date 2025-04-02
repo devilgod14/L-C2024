@@ -20,15 +20,15 @@ class Customer {
   }
 
   getWalletBalance() {
-    return this.#wallet.getTotalMoney();
+    return this.#wallet.getBalane();
   }
 
   depositMoney(amount) {
-    this.#wallet.addMoney(amount);
+    this.#wallet.creditMoney(amount);
   }
 
   pay(amount) {
-    return this.#wallet.subtractMoney(amount);
+    return this.#wallet.debitMoney(amount);
   }
 }
 
