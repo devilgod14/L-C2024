@@ -15,7 +15,7 @@ async function getCoordinates(placeName) {
      * object: An object containing latitude and longitude as floats, or null if an error occurs.
      */
     const encodedPlace = encodeURIComponent(placeName);
-    const apiKey = '681834beda8f4675343599bqv1891b6'; // Replaced with the provided API key
+    const apiKey = '681834beda8f4675343599bqv1891b6'; 
     const url = `https://geocode.maps.co/search?q=${encodedPlace}&api_key=${apiKey}&format=json`;
 
     try {
