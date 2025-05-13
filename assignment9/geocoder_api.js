@@ -1,12 +1,27 @@
 const fetch = require('node-fetch');
-const readline = require('readline').createInterface({
-    input: process.stdin,
-    output: process.stdout,
-});
+
+// Adapter function to handle the API interaction
+async function geocodeAPIAdapter(encodedPlace) {
+    const url = `https://geocode.maps.co/search?q=${encodedPlace}&api_key=${process.env.API_KEY}&format=json`;
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            console.error(`API Error: HTTP status ${response.status}`);
+            return { error: `HTTP status ${response.status}` };
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("API Request Error:", error);
+        return { error: error.message };
+    }
+}
 
 async function getCoordinates(placeName) {
     /**
-     * Fetches latitude and longitude for a given place name using the geocode.maps.co API.
+     * Fetches latitude and longitude for a given place name using an adapter
+     * for the geocode.maps.co API.
      *
      * Args:
      * placeName (string): The name of the place to geocode.
@@ -15,53 +30,14 @@ async function getCoordinates(placeName) {
      * object: An object containing latitude and longitude as floats, or null if an error occurs.
      */
     const encodedPlace = encodeURIComponent(placeName);
-    const apiKey = '681834beda8f4675343599bqv1891b6'; 
-    const url = `https://geocode.maps.co/search?q=${encodedPlace}&api_key=${apiKey}&format=json`;
+    const apiResponse = await geocodeAPIAdapter(encodedPlace);
 
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            console.error(`Error: HTTP status ${response.status}`);
-            return null;
-        }
-        const data = await response.json();
-
-        // Assuming the API returns an array of results, and we want the first one
-        if (Array.isArray(data) && data.length > 0 && data[0].lat && data[0].lon) {
-            const latitude = parseFloat(data[0].lat);
-            const longitude = parseFloat(data[0].lon);
-            return { latitude, longitude };
-        } else {
-            console.error(`Error: Could not find latitude and longitude for '${placeName}'. API response:`, data);
-            return null;
-        }
-    } catch (error) {
-        console.error("Error during API request:", error);
+    if (apiResponse && Array.isArray(apiResponse) && apiResponse.length > 0 && apiResponse[0].lat && apiResponse[0].lon) {
+        const latitude = parseFloat(apiResponse[0].lat);
+        const longitude = parseFloat(apiResponse[0].lon);
+        return { latitude, longitude };
+    } else {
+        console.error(`Error: Could not find latitude and longitude for '${placeName}'. API response:`, apiResponse);
         return null;
     }
 }
-
-function main() {
-    /**
-     * A simple console application to get latitude and longitude for a place name.
-     */
-    readline.question('UserInput: ', async (placeInput) => {
-        if (!placeInput) {
-            console.log('Please enter a place name.');
-            readline.close();
-            return;
-        }
-
-        const coordinates = await getCoordinates(placeInput);
-
-        if (coordinates) {
-            console.log('Output:');
-            console.log(`Latitude: ${coordinates.latitude}`);
-            console.log(`Longitude: ${coordinates.longitude}`);
-        }
-
-        readline.close();
-    });
-}
-
-main();
