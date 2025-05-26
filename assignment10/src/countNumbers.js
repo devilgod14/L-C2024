@@ -15,4 +15,4 @@ function countNumbersWithSameDivisorCount(upperLimitN) {
   return 1;
 }
 
-module.exports = countNumbersWithSameDivisorCount;
+module.exports = countNumbersWithSameDivisorCount; 

@@ -24,7 +24,7 @@ describe('countNumbersWithSameDivisorCount', () => {
   test('should return 0 for upperLimitN = 0 (violates constraints)', () => {
     // Explanation: Constraints state 1 <= N. If N is 0, no x >= 1 can be in range.
     expect(countNumbersWithSameDivisorCount(0)).toBe(0);
-  });
+  }); 
 
   // Test Case: N = -5 (Negative Scenario - violates lower bound constraint)
   test('should return 0 for negative upperLimitN like -5 (violates constraints)', () => {
