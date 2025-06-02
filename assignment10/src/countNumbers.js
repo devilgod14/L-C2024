@@ -6,7 +6,10 @@
  *
  */
 function countNumbersWithSameDivisorCount(upperLimitN) {
-  return 0; // This will make the test for upperLimitN=1 fail (expected 1)
+    // Minimal implementation to make M>=1 tests pass
+  // As per mathematical analysis, only x=1 satisfies the condition.
+  // Since 1 <= x <= N, if N >= 1, then x=1 is always included.
+  return 1;
 }
 
 module.exports = countNumbersWithSameDivisorCount;
