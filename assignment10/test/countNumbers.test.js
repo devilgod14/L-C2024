@@ -1,4 +1,3 @@
-// test/countNumbers.test.js
 const countNumbersWithSameDivisorCount = require('../src/countNumbers');
 
 describe('countNumbersWithSameDivisorCount', () => {
@@ -9,8 +8,6 @@ describe('countNumbersWithSameDivisorCount', () => {
     expect(countNumbersWithSameDivisorCount(1)).toBe(1);
   });
 
-  // test/countNumbers.test.js (add inside the describe block)
-// ... existing tests ...
 
   // Test Case: N = 0 (Negative Scenario - violates lower bound constraint)
   test('should return 0 for upperLimitN = 0 (violates constraints)', () => {
