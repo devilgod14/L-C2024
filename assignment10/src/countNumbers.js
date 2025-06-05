@@ -36,11 +36,11 @@ class DivisorMatchCounter {
 
   #precomputeDivisorCounts() {
     // Iterate from 1 up to maxPrecomputationLimit + 1 to cover all potential 'n' and 'n+1' values.
-    for (let i = 1; i <= this.#maxPrecomputationLimit + 1; i++) {
+    for (let divisor = 1; divisor <= this.#maxPrecomputationLimit + 1;divisor++) {
       // For each number 'i', increment the count for all its multiples 'j'.
       // This correctly calculates the number of divisors for each 'j'.
-      for (let j = i; j <= this.#maxPrecomputationLimit + 1; j += i) {
-        this.#divisorCounts[j]++;
+      for (let multiple = divisor; multiple <= this.#maxPrecomputationLimit + 1; multiple += divisor) {
+        this.#divisorCounts[multiple]++;
       }
     }
   }
@@ -71,7 +71,7 @@ class DivisorMatchCounter {
     if (upperLimit < 1) {
       return 0;
     }
-    // Ensure X is within the precomputed range.
+    // Ensure upperLimit is within the precomputed range.
     if (upperLimit > this._maxPrecomputationLimit) {
       console.warn(`Warning: X (${upperLimit}) exceeds the precomputed limit (${this._maxPrecomputationLimit}). Results might be inaccurate or cause errors.`);
     }
