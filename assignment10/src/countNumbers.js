@@ -62,7 +62,7 @@ class DivisorMatchCounter {
    * @description Counts the number of integers 'n' within the range [1, X]
    * for which 'n' and 'n+1' have the same number of positive divisors.
    * @param {number} upperLimit - The upper limit for 'n' (inclusive). Must be a positive integer.
-   * @returns {number} The count of such integers 'n'. Returns 0 if X < 1.
+   * @returns {number} The count of such integers 'n'. Returns 0 if uppperLimit < 1.
    */
   countMatchingDivisors(upperLimit) {
     // Handle invalid 
