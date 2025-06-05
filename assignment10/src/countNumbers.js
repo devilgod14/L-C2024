@@ -59,9 +59,33 @@ class DivisorMatchCounter {
     return this.#divisorCounts[num];
   }
 
-  countMatchingDivisors(X) {
-    // To be implemented
-    return 0;
+  /**
+   * @public
+   * @description Counts the number of integers 'n' within the range [1, X]
+   * for which 'n' and 'n+1' have the same number of positive divisors.
+   * @param {number} upperLimit - The upper limit for 'n' (inclusive). Must be a positive integer.
+   * @returns {number} The count of such integers 'n'. Returns 0 if X < 1.
+   */
+  countMatchingDivisors(upperLimit) {
+    // Handle invalid 
+    if (upperLimit < 1) {
+      return 0;
+    }
+    // Ensure X is within the precomputed range.
+    if (upperLimit > this._maxPrecomputationLimit) {
+      console.warn(`Warning: X (${upperLimit}) exceeds the precomputed limit (${this._maxPrecomputationLimit}). Results might be inaccurate or cause errors.`);
+    }
+
+    let matchingCount = 0;
+    // Iterate 'n' from 1 up to 'X' (inclusive)
+    for (let n = 1; n <= upperLimit; n++) {
+      // Compare the number of divisors for 'n' and 'n+1'.
+      // getDivisorCountOf handles range validation internally.
+      if (this.getDivisorCountOf(n) === this.getDivisorCountOf(n + 1)) {
+        matchingCount++;
+      }
+    }
+    return matchingCount;
   }
 }
 
