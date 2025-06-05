@@ -16,4 +16,11 @@ describe('DivisorMatchCounter', () => {
     expect(divisorMatcher.getDivisorCountOf(7)).toBe(2); // Divisors: 1, 7 (prime)
     expect(divisorMatcher.getDivisorCountOf(12)).toBe(6); // Divisors: 1, 2, 3, 4, 6, 12
   });
+
+  test('should return 2 for X = 15 (sample case)', () => {
+      // For n=2: d(2)=2, d(3)=2 (Match)
+      // For n=14: d(14)=4, d(15)=4 (Match)
+      expect(divisorMatcher.countMatchingDivisors(15)).toBe(2);
+    });
+    
 });
