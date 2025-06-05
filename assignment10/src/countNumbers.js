@@ -37,8 +37,6 @@ class DivisorMatchCounter {
   #precomputeDivisorCounts() {
     // Iterate from 1 up to maxPrecomputationLimit + 1 to cover all potential 'n' and 'n+1' values.
     for (let divisor = 1; divisor <= this.#maxPrecomputationLimit + 1;divisor++) {
-      // For each number 'i', increment the count for all its multiples 'j'.
-      // This correctly calculates the number of divisors for each 'j'.
       for (let multiple = divisor; multiple <= this.#maxPrecomputationLimit + 1; multiple += divisor) {
         this.#divisorCounts[multiple]++;
       }
