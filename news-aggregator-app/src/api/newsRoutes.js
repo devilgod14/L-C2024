@@ -13,4 +13,24 @@ router.post('/fetch', isAuthenticated, isAdmin, async (req, res) => {
   }
 });
 
+router.get('/headlines', isAuthenticated, async (req, res) => {
+    try {
+        const articles = await newsService.getHeadlines(req.query);
+        res.json(articles);
+    } catch (error) {
+        console.error('Error getting headlines:', error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
+router.get('/search', isAuthenticated, async (req, res) => {
+    try {
+        const articles = await newsService.searchArticles(req.query);
+        res.json(articles);
+    } catch (error) {
+        console.error('Error searching articles:', error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
 module.exports = router;
