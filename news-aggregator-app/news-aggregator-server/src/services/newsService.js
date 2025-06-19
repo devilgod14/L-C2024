@@ -99,11 +99,7 @@ class NewsService {
 
      if (newArticleIds.length > 0) {
       console.log(`Found ${newArticleIds.length} new articles. Triggering notification engine.`);
-      // Fetch the full documents for the new articles, with populated data
         newArticles = await Article.find({ '_id': { $in: newArticleIds } }).populate('categoryId', 'name');
-      // We will call the notification service here. For now, we will just log.
-      // In the next step (background jobs) we'll properly call this.
-      // notificationService.generateNotificationsForArticles(newArticles, transporter);
     }
     
 

@@ -52,6 +52,8 @@ async function loginUser(email, password) {
     user: {
       id: user.id,
       role: user.role, 
+      username: user.username,
+      email: user.email, 
     },
   };
 

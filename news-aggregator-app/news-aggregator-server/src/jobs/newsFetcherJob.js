@@ -3,8 +3,8 @@ const newsService = require('../services/newsService');
 const notificationService = require('../services/notificationService');
 
 module.exports = (emailTransporter) => {
-  //const schedule = '0 */4 * * *'; 
-  const schedule = '* * * * *'; 
+  const schedule = '0 */4 * * *'; 
+  //const schedule = '* * * * *'; 
 
   console.log(`Scheduling news fetch job with schedule: "${schedule}"`);
 
