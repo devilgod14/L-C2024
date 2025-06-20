@@ -1,4 +1,5 @@
-import { getNotificationSettings, updateNotificationSettings } from '../api/api.js';
+import { getAllCategories } from '../api/categoryApi.js';
+import { getNotificationSettings, getViewableNotifications, updateNotificationSettings } from '../api/notificationApi.js';
 import {  promptForNotificationAction, promptToConfigureNotifications } from '../ui/prompts.js';
 
 
@@ -7,6 +8,7 @@ export const handleNotifications = async () => {
   const choice = await promptForNotificationAction();
   switch (choice) {
     case 'View Notifications':
+     handleViewNotications();
       break;
     case 'Configure Notifications':
       await handleConfigure();
@@ -19,17 +21,42 @@ export const handleNotifications = async () => {
 export const handleConfigure = async () => {
   try {
     console.log('\nFetching your current notification settings...');
-    const currentSettings = await getNotificationSettings();
-
-    const newSettings = await promptToConfigureNotifications(currentSettings);
+      const [currentSettings, allCategories] = await Promise.all([
+      getNotificationSettings(),
+      getAllCategories()
+    ]);
+    const newSettings = await promptToConfigureNotifications(currentSettings,allCategories);
 
     await updateNotificationSettings(newSettings);
-    console.log('\n✅ Notification settings updated successfully!');
+    console.log('\n Notification settings updated successfully!');
   } catch (error: any) {
-    console.error(`\n❌ Error configuring notifications: ${error.response?.data?.message}`);
+    console.error(`\n Error configuring notifications: ${error.response?.data?.message}`);
   }
 };
 
-export const handleViewNotifications = async () => {
-  console.log('\n--> Feature to view notifications coming soon...');
+export const handleViewNotications = async () => {
+  console.log('\nFetching your notifications...');
+  try {
+    const notifications = await getViewableNotifications();
+
+    if (notifications.length === 0) {
+      console.log('You have no new notifications.');
+      return;
+    }
+
+    console.log('\n--- Your Notifications ---');
+    notifications.forEach((notif: any) => {
+      const articleTitle = notif.articleId ? notif.articleId.title : 'Article not found';
+      const date = new Date(notif.createdAt).toLocaleString();
+      
+      console.log(`\n----------------------------------------`);
+      console.log(`[${date}]`);
+      console.log(`Message: ${notif.message}`);
+      console.log(`Article: ${articleTitle}`);
+    });
+    console.log(`----------------------------------------`);
+
+  } catch (error: any) {
+    console.error(`\n Error fetching notifications: ${error.response?.data?.message}`);
+  }
 };

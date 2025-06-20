@@ -19,6 +19,14 @@ const articleSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
+   likes: {
+    type: Number,
+    default: 0
+  },
+  dislikes: {
+    type: Number,
+    default: 0
+  },
   categoryId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',

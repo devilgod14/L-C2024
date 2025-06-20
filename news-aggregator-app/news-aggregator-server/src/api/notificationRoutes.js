@@ -25,4 +25,13 @@ router.put('/settings', async (req, res) => {
   }
 });
 
+router.get('/', async (req, res) => {
+  try {
+    const notifications = await notificationService.getNotificationsForUser(req.user.id);
+    res.json(notifications);
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
 module.exports = router;

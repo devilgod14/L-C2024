@@ -4,6 +4,28 @@ const Category = require('../models/Category');
 const Article = require('../models/Article');
 
 class NewsService {
+
+   constructor() {
+    this.categoryKeywords = {
+      Technology: ['Apple', 'Google', 'Microsoft', 'AI', 'software', 'iPhone', 'app', 'data', 'startup'],
+      Sports: ['NBA', 'NFL', 'FIFA', 'World Cup', 'player', 'score', 'game', 'match', 'stadium', 'champion'],
+      Business: ['stock', 'market', 'earnings', 'finance', 'economy', 'company', 'invest', 'shares'],
+      Entertainment: ['movie', 'music', 'album', 'celebrity', 'film', 'television', 'actor'],
+    };
+  }  
+
+  _categorizeByKeywords(textToScan) {
+    const text = textToScan.toLowerCase();
+    for (const category in this.categoryKeywords) {
+      for (const keyword of this.categoryKeywords[category]) {
+        if (text.includes(keyword.toLowerCase())) {
+          return category; 
+        }
+      }
+    }
+    return 'General'; 
+  }
+
   _normalizeArticle(article, sourceName) {
     const sourceKey = sourceName.trim();
     let normalized = {
@@ -31,6 +53,11 @@ class NewsService {
       normalized.url = article.url;
       normalized.publishedAt = article.publishedAt || new Date();
       normalized.categoryName = 'General';
+    }
+
+    if (normalized.categoryName === 'General') {
+      const combinedText = `${normalized.title} ${normalized.description}`;
+      normalized.categoryName = this._categorizeByKeywords(combinedText);
     }
 
     if (!normalized.categoryName) {
@@ -147,7 +174,7 @@ class NewsService {
   }
 
    async searchArticles(filters = {}) {
-    const { query, startDate, endDate } = filters;
+    const { query, startDate, endDate, sortBy } = filters;
 
     if (!query) {
       return [];
@@ -169,8 +196,18 @@ class NewsService {
       }
     }
 
+      let sortQuery = { publishedAt: -1 }; 
+    switch (sortBy) {
+      case 'likes':
+        sortQuery = { likes: -1 };
+        break;
+      case 'dislikes':
+        sortQuery = { dislikes: -1 };
+        break;
+    }
+
     const articles = await Article.find(mongoQuery)
-      .sort({ publishedAt: -1 })
+      .sort(sortQuery)
       .populate('categoryId', 'name')
       .populate('sourceId', 'name');
 

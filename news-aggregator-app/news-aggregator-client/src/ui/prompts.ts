@@ -106,24 +106,24 @@ export const promptForCategory = async (): Promise<string> => {
   return choice;
 };
 
-export const promptAfterArticles = async (): Promise<string> => {
+export const promptAfterArticleList = async (): Promise<string> => {
   const { choice } = await inquirer.prompt([
     {
       type: 'list',
       name: 'choice',
       message: 'What would you like to do?',
-      choices: ['Save Article', 'Back to Main Menu'],
+      choices: ['Like an Article', 'Dislike an Article', 'Save an Article', 'Back to Main Menu'],
     },
   ]);
   return choice;
 };
 
-export const promptForArticleId = async (): Promise<string> => {
+export const promptForArticleId = async (message: string): Promise<string> => {
   const { articleId } = await inquirer.prompt([
     {
       type: 'input',
       name: 'articleId',
-      message: 'Enter the Article ID of the article you wish to save:',
+      message: message,
     },
   ]);
   return articleId;
@@ -165,8 +165,7 @@ export const promptForNotificationAction = async (): Promise<string> => {
   return choice;
 };
 
-export const promptToConfigureNotifications = async (currentSettings: any): Promise<any> => {
-  const allCategories = ['Business', 'Entertainment', 'Sports', 'Technology'];
+export const promptToConfigureNotifications = async (currentSettings: any, allCategories: any[]): Promise<any> => {
 
   const { newCategories } = await inquirer.prompt([
     {
@@ -177,7 +176,7 @@ export const promptToConfigureNotifications = async (currentSettings: any): Prom
       default: currentSettings.enabledCategories,
     },
   ]);
-  
+
   const { keywords } = await inquirer.prompt([
     {
       type: 'input',
@@ -191,4 +190,64 @@ export const promptToConfigureNotifications = async (currentSettings: any): Prom
     enabledCategories: newCategories,
     keywords: keywords.split(',').map((k: string) => k.trim()).filter((k: string) => k)
   };
+};
+
+export const promptForSearchQuery = async (): Promise<string> => {
+  const { query } = await inquirer.prompt([
+    {
+      type: 'input',
+      name: 'query',
+      message: 'Enter your search query:',
+    },
+  ]);
+  return query;
+};
+
+export const promptForSortOption = async (): Promise<string> => {
+  const { choice } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'choice',
+      message: 'How would you like to sort the results?',
+      choices: [
+        { name: 'Newest First', value: 'publishedAt' },
+        { name: 'Most Likes', value: 'likes' },
+        { name: 'Most Dislikes', value: 'dislikes' },
+      ],
+    },
+  ]);
+  return choice;
+};
+
+export const promptForSourceUpdate = async (): Promise<{ sourceId: string, apiKey: string }> => {
+  return inquirer.prompt([
+    { type: 'input', name: 'sourceId', message: 'Enter the Source ID to update:' },
+    { type: 'input', name: 'apiKey', message: 'Enter the new API Key:' },
+  ]);
+};
+
+export const promptForNewCategory = async (): Promise<string> => {
+    const { name } = await inquirer.prompt([
+      { type: 'input', name: 'name', message: 'Enter the new category name:'}
+    ]);
+    return name;
+};
+
+export const promptAdminAfterSources = async (): Promise<string> => {
+  const { choice } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'choice',
+      message: 'What would you like to do?',
+      choices: ['View Server Details', 'Update an API Key', 'Back to Main Menu'],
+    },
+  ]);
+  return choice;
+};
+
+export const promptForSourceId = async (message: string): Promise<string> => {
+    const { sourceId } = await inquirer.prompt([
+        { type: 'input', name: 'sourceId', message: message }
+    ]);
+    return sourceId;
 };

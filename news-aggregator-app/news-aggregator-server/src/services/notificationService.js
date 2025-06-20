@@ -35,6 +35,14 @@ class NotificationService {
     return updatedSettings;
   }
 
+  async getNotificationsForUser(userId) {
+    const notifications = await Notification.find({ userId })
+      .sort({ createdAt: -1 }) 
+      .populate('articleId', 'title url'); 
+
+    return notifications;
+}
+
   async generateNotificationsForArticles(newArticles, transporter) {
     if (!newArticles || newArticles.length === 0) {
       return; 

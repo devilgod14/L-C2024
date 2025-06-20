@@ -1,53 +1,7 @@
-import { promptMainMenu, promptUserMenu, promptAdminMenu } from './ui/prompts.js';
-import { handleLogin, handleSignup } from './flows/auth.js';
+import { promptMainMenu } from './ui/prompts.js';
+import { handleLogin, handleSignup } from './flows/authFlows.js';
 import { getState, setState } from './state.js';
-import { handleHeadlines, handleSavedArticles, handleSearch } from './flows/userFlows.js';
-import { handleViewServers, handleAddCategory } from './flows/adminFlows.js';
-import { handleNotifications } from './flows/notificationFlows.js';
-
-const showAdminMenu = async () => {
-  let inMenu = true;
-  while (inMenu) {
-    const choice = await promptAdminMenu();
-    switch (choice) {
-      case 'View the list of external servers and status':
-        await handleViewServers();
-        break;
-      case 'Add new News Category':
-        await handleAddCategory();
-        break;
-      case 'Logout':
-        inMenu = false;
-        break;
-    }
-    if (inMenu) console.log('\n');
-  }
-};
-
-const showUserMenu = async () => {
-  let inMenu = true;
-  while (inMenu) {
-    const choice = await promptUserMenu();
-    switch (choice) {
-      case 'Headlines':
-        await handleHeadlines();
-        break;
-      case 'Saved Articles':
-        await handleSavedArticles();
-        break;
-      case 'Search':
-        await handleSearch();
-        break;
-      case 'Notifications':
-        await handleNotifications();
-        break;
-      case 'Logout':
-        inMenu = false;
-        break;
-    }
-    if (inMenu) console.log('\n');
-  }
-};
+import { showAdminMenu, showUserMenu } from './flows/userFlows.js';
 
 const startApp = async () => {
  

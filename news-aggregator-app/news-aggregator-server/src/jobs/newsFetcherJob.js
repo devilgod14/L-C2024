@@ -14,7 +14,6 @@ module.exports = (emailTransporter) => {
       const newArticles = await newsService.fetchAndStoreNews();
 
       if (newArticles && newArticles.length > 0) {
-        // Now we use the transporter that was passed in
         await notificationService.generateNotificationsForArticles(newArticles, emailTransporter);
       } else {
         console.log('No new articles found. Skipping notification engine.');

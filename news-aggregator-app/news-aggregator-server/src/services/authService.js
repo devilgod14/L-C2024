@@ -66,7 +66,6 @@ async function loginUser(email, password) {
   return token;
 }
 
-// Export both functions
 module.exports = {
   registerUser,
   loginUser,
