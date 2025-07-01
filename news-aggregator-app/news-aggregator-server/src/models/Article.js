@@ -27,6 +27,15 @@ const articleSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  isHidden: {
+    type: Boolean,
+    default: false,
+    index: true
+  },
+  reportCount: {
+    type: Number,
+    default: 0
+  },
   categoryId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',

@@ -19,3 +19,8 @@ export const voteOnArticle = async (articleId: string, vote: 'like' | 'dislike')
     const response = await api.post(`/articles/${articleId}/vote`, { vote });
     return response.data;
 };
+
+export const reportArticle = async (articleId: string) => {
+  const response = await api.post(`/articles/${articleId}/report`);
+  return response.data;
+};

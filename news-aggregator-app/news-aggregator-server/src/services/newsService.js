@@ -2,6 +2,8 @@ const axios = require('axios');
 const ExternalAPISource = require('../models/ExternalAPISource');
 const Category = require('../models/Category');
 const Article = require('../models/Article');
+const BlockedKeywords = require('../models/BlockedKeywords');
+const recommendationService = require('./recommendationService');
 
 class NewsService {
 
@@ -64,6 +66,28 @@ class NewsService {
       normalized.categoryName = 'General';
     }
     return normalized;
+  }
+
+   async _getBaseContentFilter() {
+    const hiddenCategories = await Category.find({ isHidden: true }).select('_id');
+    const hiddenCategoryIds = hiddenCategories.map(c => c._id);
+
+    const blockedKeywords = await BlockedKeywords.find({});
+    const keywordRegexs = blockedKeywords.map(kw => new RegExp(kw.keyword, 'i'));
+
+    const filter = {
+      isHidden: false, 
+      categoryId: { $nin: hiddenCategoryIds },
+    };
+
+    if (keywordRegexs.length > 0) {
+      filter.$nor = [
+        { title: { $in: keywordRegexs } },
+        { description: { $in: keywordRegexs } },
+      ];
+    }
+
+    return filter;
   }
 
   async fetchAndStoreNews() {
@@ -136,10 +160,10 @@ class NewsService {
     return newArticles;
   }
 
-  async getHeadlines(filters = {}) {
+  async getHeadlines( { filters = {}, userId }) {
     const { category, startDate, endDate } = filters;
-
-    const query = {};
+    const baseFilter = await this._getBaseContentFilter();
+    let query = { ...baseFilter };
 
     if (category && category.toLowerCase() !== 'all') {
       const categoryDoc = await Category.findOne({
@@ -170,17 +194,23 @@ class NewsService {
       .populate('categoryId', 'name') 
       .populate('sourceId', 'name'); 
 
-    return articles;
+    const scoredArticles = await recommendationService.scoreArticlesForUser({ userId, articles });
+    scoredArticles.sort((a, b) => b.relevanceScore - a.relevanceScore || new Date(b.publishedAt) - new Date(a.publishedAt));
+
+    return scoredArticles;
   }
 
-   async searchArticles(filters = {}) {
-    const { query, startDate, endDate, sortBy } = filters;
+   async searchArticles( { filters = {}, userId } ) {
+    const { query, startDate, endDate } = filters;
 
     if (!query) {
       return [];
     }
 
-    const mongoQuery = {
+     const baseFilter = await this._getBaseContentFilter();
+
+     let mongoQuery = { 
+      ...baseFilter,
       $text: { $search: query } 
     };
 
@@ -196,22 +226,17 @@ class NewsService {
       }
     }
 
-      let sortQuery = { publishedAt: -1 }; 
-    switch (sortBy) {
-      case 'likes':
-        sortQuery = { likes: -1 };
-        break;
-      case 'dislikes':
-        sortQuery = { dislikes: -1 };
-        break;
-    }
-
+    let sortQuery = { publishedAt: -1 }; 
+  
     const articles = await Article.find(mongoQuery)
       .sort(sortQuery)
       .populate('categoryId', 'name')
       .populate('sourceId', 'name');
 
-    return articles;
+    const scoredArticles = await recommendationService.scoreArticlesForUser({ userId, articles });
+    scoredArticles.sort((a, b) => b.relevanceScore - a.relevanceScore || new Date(b.publishedAt) - new Date(a.publishedAt));
+    
+    return scoredArticles;
   }
 
 }

@@ -1,4 +1,5 @@
 const Article = require('../models/Article');
+const Report = require('../models/Report');
 const Vote = require('../models/Vote');
 
 class ArticleService {
@@ -48,9 +49,40 @@ class ArticleService {
         { $inc: { likes: likeChange, dislikes: dislikeChange } }
       );
     }
-    
+
     return Article.findById(articleId).select('likes dislikes');
   }
+
+async reportArticle({ userId, articleId }) {
+
+    const article = await Article.findById(articleId);
+    if (!article) {
+      throw new Error('Article not found.');
+    }
+
+    const existingReport = await Report.findOne({ userId, articleId });
+    if (existingReport) {
+      throw new Error('You have already reported this article.');
+    }
+
+    await Report.create({ userId, articleId });
+
+    const updatedArticle = await Article.findByIdAndUpdate(
+      articleId,
+      { $inc: { reportCount: 1 } },
+      { new: true } 
+    );
+
+    const reportThreshold = parseInt(process.env.REPORT_THRESHOLD, 10) || 5;
+    if (updatedArticle.reportCount >= reportThreshold) {
+      updatedArticle.isHidden = true;
+      await updatedArticle.save();
+      console.log(`Article ${articleId} automatically hidden due to exceeding report threshold.`);
+      
+    }
+    
+    return { message: 'Article reported successfully.' };
+ }
 }
 
 module.exports = new ArticleService();

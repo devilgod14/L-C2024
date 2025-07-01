@@ -1,7 +1,7 @@
 import { getHeadlines, searchArticles } from "../api/newsApi.js";
-import { deleteSavedArticle, getSavedArticles, saveArticle, voteOnArticle } from "../api/userApi.js";
+import { deleteSavedArticle, getSavedArticles, reportArticle, saveArticle, voteOnArticle } from "../api/userApi.js";
 import { promptAdminMenu, promptAfterArticleList, promptAfterSavedArticles, promptForArticleId, promptForCategory, promptForDate, promptForDateOption, promptForSavedArticleIdToDelete, promptForSearchQuery, promptForSortOption, promptUserMenu } from "../ui/prompts.js";
-import { handleAddCategory, handleViewServers } from "./adminFlows.js";
+import { handleAddCategory, handleManageCategories, handleManageKeywords, handleReportedArticles, handleViewServers } from "./adminFlows.js";
 import { handleNotifications } from "./notificationFlows.js";
 
 
@@ -12,6 +12,15 @@ export const showAdminMenu = async () => {
     switch (choice) {
       case 'View the list of external servers and status':
         await handleViewServers();
+        break;
+      case 'Manage Reported Articles':
+        await handleReportedArticles();
+        break;
+      case 'Manage Categories':
+        await handleManageCategories();
+        break;
+      case 'Manage Blocked Keywords':
+        await handleManageKeywords();
         break;
       case 'Add new News Category':
         await handleAddCategory();
@@ -82,6 +91,12 @@ async function displayAndInteractWithArticles(articles: any[]) {
           articleId = await promptForArticleId('Enter the Article ID to DISLIKE:');
           await voteOnArticle(articleId, 'dislike');
           console.log('\n Vote registered successfully!');
+          break;
+
+        case 'Report an Article':
+          articleId  =await promptForArticleId('Enter the Article ID to Report');
+          await reportArticle(articleId);
+          console.log('\n Article Reported successfully');
           break;
 
         case 'Save an Article':

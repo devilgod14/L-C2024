@@ -15,7 +15,10 @@ router.post('/fetch', isAuthenticated, isAdmin, async (req, res) => {
 
 router.get('/headlines', isAuthenticated, async (req, res) => {
     try {
-        const articles = await newsService.getHeadlines(req.query);
+        const articles = await newsService.getHeadlines({ 
+            filters: req.query, 
+            userId: req.user.id 
+        });
         res.json(articles);
     } catch (error) {
         console.error('Error getting headlines:', error);
@@ -25,7 +28,10 @@ router.get('/headlines', isAuthenticated, async (req, res) => {
 
 router.get('/search', isAuthenticated, async (req, res) => {
     try {
-        const articles = await newsService.searchArticles(req.query);
+        const articles = await newsService.searchArticles({ 
+            filters: req.query, 
+            userId: req.user.id 
+        });
         res.json(articles);
     } catch (error) {
         console.error('Error searching articles:', error);

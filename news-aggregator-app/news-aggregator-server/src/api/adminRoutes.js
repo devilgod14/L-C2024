@@ -50,4 +50,76 @@ router.get('/sources/:id', async (req, res) => {
   }
 });
 
+router.get('/reports', async (req, res) => {
+  try {
+    const articles = await adminService.getReportedArticles();
+    res.json(articles);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+router.put('/articles/:id/hide', async (req, res) => {
+  try {
+    const article = await adminService.hideArticle(req.params.id);
+    if (!article) return res.status(404).json({ message: 'Article not found' });
+    res.json(article);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+router.put('/categories/:id/hide', async (req, res) => {
+  try {
+    const category = await adminService.hideCategory(req.params.id);
+    if (!category) return res.status(404).json({ message: 'Category not found' });
+    res.json(category);
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+router.put('/categories/:id/unhide', async (req, res) => {
+  try {
+    const category = await adminService.unhideCategory(req.params.id);
+    if (!category) return res.status(404).json({ message: 'Category not found' });
+    res.json(category);
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+router.get('/keywords', async (req, res) => {
+  try {
+    const keywords = await adminService.getBlockedKeywords();
+    res.json(keywords);
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+router.post('/keywords', async (req, res) => {
+  const { keyword } = req.body;
+  if (!keyword) {
+    return res.status(400).json({ message: 'Keyword is required' });
+  }
+  try {
+    const newKeyword = await adminService.addBlockedKeyword({ keyword, adminId: req.user.id });
+    res.status(201).json(newKeyword);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+router.delete('/keywords/:id', async (req, res) => {
+    try {
+        await adminService.removeBlockedKeyword(req.params.id);
+        res.json({ message: 'Keyword removed successfully.' });
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+});
+
 module.exports = router;

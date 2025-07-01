@@ -57,6 +57,9 @@ export const promptAdminMenu = async (): Promise<string> => {
       message: 'Admin Menu - Please choose an option:',
       choices: [
         'View the list of external servers and status', 
+        'Manage Reported Articles',
+        'Manage Categories',
+        'Manage Blocked Keywords',
         'Add new News Category',                         
         'Logout',                                        
       ],
@@ -112,7 +115,7 @@ export const promptAfterArticleList = async (): Promise<string> => {
       type: 'list',
       name: 'choice',
       message: 'What would you like to do?',
-      choices: ['Like an Article', 'Dislike an Article', 'Save an Article', 'Back to Main Menu'],
+      choices: ['Like an Article', 'Dislike an Article', 'Report an Article', 'Save an Article', 'Back to Main Menu'],
     },
   ]);
   return choice;
@@ -251,3 +254,68 @@ export const promptForSourceId = async (message: string): Promise<string> => {
     ]);
     return sourceId;
 };
+
+export const promptForReportAction = async (): Promise<string> => {
+  const { choice } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'choice',
+      message: 'Report Management - What would you like to do?',
+      choices: ['Hide an Article', 'Back to Admin Menu'],
+    },
+  ]);
+  return choice;
+};
+
+export const promptForArticleIdToHide = async (): Promise<string> => {
+    const { articleId } = await inquirer.prompt([
+        { type: 'input', name: 'articleId', message: 'Enter the Article ID to HIDE:'}
+    ]);
+    return articleId;
+};
+
+export const promptForCategoryManagement = async (): Promise<string> => {
+  const { choice } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'choice',
+      message: 'Category Management - What would you like to do?',
+      choices: ['Hide a Category', 'Unhide a Category', 'Back to Admin Menu'],
+    },
+  ]);
+  return choice;
+};
+
+export const promptForCategoryId = async (message: string): Promise<string> => {
+    const { categoryId } = await inquirer.prompt([
+        { type: 'input', name: 'categoryId', message: message }
+    ]);
+    return categoryId;
+};
+
+export const promptForKeywordManagement = async (): Promise<string> => {
+  const { choice } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'choice',
+      message: 'Blocked Keywords - What would you like to do?',
+      choices: ['View Blocked Keywords', 'Add a Keyword', 'Remove a Keyword', 'Back to Admin Menu'],
+    },
+  ]);
+  return choice;
+};
+
+export const promptForNewKeyword = async (): Promise<string> => {
+    const { keyword } = await inquirer.prompt([
+        { type: 'input', name: 'keyword', message: 'Enter the keyword to block:' }
+    ]);
+    return keyword;
+};
+
+export const promptForKeywordIdToRemove = async (): Promise<string> => {
+    const { keywordId } = await inquirer.prompt([
+        { type: 'input', name: 'keywordId', message: 'Enter the ID of the keyword to remove:' }
+    ]);
+    return keywordId;
+};
+
