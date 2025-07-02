@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken')
  * @returns {object} The created user object (without password)
  */
 async function registerUser(userData) {
-    console.log(userData)
+
   const { username, email, password } = userData;
   const userExists = await User.findOne({ email });
   if (userExists) {

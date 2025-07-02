@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --detectOpenHandles",
     "start": "node ./node_modules/nodemon/bin/nodemon.js app.js"
   },
   "keywords": [],
@@ -15,10 +15,13 @@
     "bcryptjs": "^3.0.2",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "jest": "^30.0.3",
     "jsonwebtoken": "^9.0.2",
+    "mongodb-memory-server": "^10.1.4",
     "mongoose": "^8.15.1",
     "node-cron": "^4.1.0",
-    "nodemailer": "^7.0.3"
+    "nodemailer": "^7.0.3",
+    "supertest": "^7.1.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
