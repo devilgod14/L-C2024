@@ -1,0 +1,25 @@
+{"level":"info","message":"MongoDB Connected: ac-uilummq-shard-00-02.qibz63l.mongodb.net","timestamp":"2025-07-04T09:25:20.841Z"}
+{"level":"info","message":"Ethereal test account created successfully.","timestamp":"2025-07-04T09:25:21.683Z"}
+{"level":"info","message":"User: ccnkq2fons37onua@ethereal.email | Pass: gdmf9V1dk5yuHCcjw8","timestamp":"2025-07-04T09:25:21.684Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-07-04T09:25:22.060Z"}
+{"isOperational":true,"level":"error","statusCode":404,"timestamp":"2025-07-04T09:29:42.748Z"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \" 68679e882f31f0ce13226738\" (type string) at path \"_id\" for model \"SavedArticle\"","name":"CastError","path":"_id","reason":{},"stringValue":"\" 68679e882f31f0ce13226738\"","value":" 68679e882f31f0ce13226738","valueType":"string"}
+{"level":"info","message":"MongoDB Connected: ac-uilummq-shard-00-00.qibz63l.mongodb.net","timestamp":"2025-07-04T09:34:35.081Z"}
+{"level":"info","message":"Ethereal test account created successfully.","timestamp":"2025-07-04T09:34:35.980Z"}
+{"level":"info","message":"User: myddxrl7dzbyivrb@ethereal.email | Pass: fugqbqQNWccrKuWMfD","timestamp":"2025-07-04T09:34:35.981Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-07-04T09:34:36.197Z"}
+{"level":"info","message":"MongoDB Connected: ac-uilummq-shard-00-01.qibz63l.mongodb.net","timestamp":"2025-07-04T09:43:16.830Z"}
+{"level":"info","message":"Ethereal test account created successfully.","timestamp":"2025-07-04T09:43:17.737Z"}
+{"level":"info","message":"User: wgizspzibkgs2wuh@ethereal.email | Pass: Pj17g8h5DCfndVNHzF","timestamp":"2025-07-04T09:43:17.738Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-07-04T09:43:17.937Z"}
+{"level":"info","message":"MongoDB Connected: ac-uilummq-shard-00-02.qibz63l.mongodb.net","timestamp":"2025-07-04T10:17:57.924Z"}
+{"level":"info","message":"Ethereal test account created successfully.","timestamp":"2025-07-04T10:17:58.903Z"}
+{"level":"info","message":"User: bruaomwxo6bs5yh3@ethereal.email | Pass: kR9jWG2HQ3VTXaSH3w","timestamp":"2025-07-04T10:17:58.905Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-07-04T10:17:59.059Z"}
+{"level":"info","message":"MongoDB Connected: ac-uilummq-shard-00-01.qibz63l.mongodb.net","timestamp":"2025-07-04T10:24:09.414Z"}
+{"level":"info","message":"Ethereal test account created successfully.","timestamp":"2025-07-04T10:24:10.285Z"}
+{"level":"info","message":"User: gu6oox2og227jsmm@ethereal.email | Pass: f3hBHQJtbKpM4st8Ep","timestamp":"2025-07-04T10:24:10.285Z"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2025-07-04T10:24:10.518Z"}
+{"isOperational":true,"level":"error","statusCode":404,"timestamp":"2025-07-04T12:19:36.640Z"}
+{"isOperational":true,"level":"error","statusCode":404,"timestamp":"2025-07-04T12:32:44.157Z"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \" \"promptSourceId\": \"Enter the Source ID to update:\",\" (type string) at path \"_id\" for model \"ExternalAPISource\"","name":"CastError","path":"_id","reason":{},"stringValue":"\" \"promptSourceId\": \"Enter the Source ID to update:\",\"","value":" \"promptSourceId\": \"Enter the Source ID to update:\",","valueType":"string"}

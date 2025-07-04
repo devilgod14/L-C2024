@@ -1,22 +1,11 @@
-
-export interface User {
-  id: string;
-  username: string;
-  email: string;
-  role: 'User' | 'Admin';
-}
-
-interface AppState {
-  token: string | null;
-  user: User | null;
-}
+import { AppState } from './types/auth.types'; 
 
 let state: AppState = {
   token: null,
   user: null,
 };
 
-export const setState = (newState: Partial<AppState>) => {
+export const setState = (newState: Partial<AppState>): void => {
   state = { ...state, ...newState };
 };
 

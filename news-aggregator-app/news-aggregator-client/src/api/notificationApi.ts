@@ -1,19 +1,20 @@
-import api from './api.js';
+import { BaseApiService } from "./baseApiservice";
 
-export const getNotificationSettings = async () => {
-  const response = await api.get('/notifications/settings');
-  return response.data;
-};
+class NotificationApi extends BaseApiService {
+  public async getSettings(): Promise<any> {
+    const { data } = await this.api.get('/notifications/settings');
+    return data;
+  }
 
-export const updateNotificationSettings = async (settings: {
-  enabledCategories?: string[];
-  keywords?: string[];
-}) => {
-  const response = await api.put('/notifications/settings', settings);
-  return response.data;
-};
+  public async updateSettings(settings: { enabledCategories?: string[]; keywords?: string[]; }): Promise<any> {
+    const { data } = await this.api.put('/notifications/settings', settings);
+    return data;
+  }
 
-export const getViewableNotifications = async () => {
-    const response = await api.get('/notifications');
-    return response.data;
-};
+  public async getViewableNotifications(): Promise<any[]> {
+    const { data } = await this.api.get('/notifications');
+    return data;
+  }
+}
+
+export default new NotificationApi();

@@ -1,62 +1,56 @@
-import { getAllCategories } from '../api/categoryApi.js';
-import { getNotificationSettings, getViewableNotifications, updateNotificationSettings } from '../api/notificationApi.js';
-import {  promptForNotificationAction, promptToConfigureNotifications } from '../ui/prompts.js';
+import { notificationApi, categoryApi } from '../api';
+import logger from '../config/logger';
+import { CommonPrompts } from '../ui/commonPrompts';
+import { NotificationPrompts } from '../ui/notificationPrompts';
+import lm from '../utils/localizationManager';
 
+export class NotificationFlows {
+  private prompts = new NotificationPrompts();
+  private commonPrompts = new CommonPrompts();
 
-export const handleNotifications = async () => {
-  console.log('\n--- Notifications ---');
-  const choice = await promptForNotificationAction();
-  switch (choice) {
-    case 'View Notifications':
-     handleViewNotications();
-      break;
-    case 'Configure Notifications':
-      await handleConfigure();
-      break;
-    case 'Back to Main Menu':
-      return;
-  }
-};
-
-export const handleConfigure = async () => {
-  try {
-    console.log('\nFetching your current notification settings...');
+  private async handleConfigure(): Promise<void> {
+    logger.info(lm.get('notifications.configureTitle'));
+    try {
+      // Fetch both the user's current settings and all available categories concurrently
       const [currentSettings, allCategories] = await Promise.all([
-      getNotificationSettings(),
-      getAllCategories()
-    ]);
-    const newSettings = await promptToConfigureNotifications(currentSettings,allCategories);
+        notificationApi.getSettings(),
+        categoryApi.getAll(),
+      ]);
 
-    await updateNotificationSettings(newSettings);
-    console.log('\n Notification settings updated successfully!');
-  } catch (error: any) {
-    console.error(`\n Error configuring notifications: ${error.response?.data?.message}`);
-  }
-};
-
-export const handleViewNotications = async () => {
-  console.log('\nFetching your notifications...');
-  try {
-    const notifications = await getViewableNotifications();
-
-    if (notifications.length === 0) {
-      console.log('You have no new notifications.');
-      return;
-    }
-
-    console.log('\n--- Your Notifications ---');
-    notifications.forEach((notif: any) => {
-      const articleTitle = notif.articleId ? notif.articleId.title : 'Article not found';
-      const date = new Date(notif.createdAt).toLocaleString();
+      const categoryNames = allCategories.map((c: any) => c.name);
+      const newSettings = await this.prompts.forConfiguration(currentSettings, categoryNames);
       
-      console.log(`\n----------------------------------------`);
-      console.log(`[${date}]`);
-      console.log(`Message: ${notif.message}`);
-      console.log(`Article: ${articleTitle}`);
-    });
-    console.log(`----------------------------------------`);
-
-  } catch (error: any) {
-    console.error(`\n Error fetching notifications: ${error.response?.data?.message}`);
+      await notificationApi.updateSettings(newSettings);
+      logger.info(lm.get('notifications.updateSuccess'));
+    } catch (error: any) { /* The API layer handles logging */ }
   }
-};
+
+  private async handleView(): Promise<void> {
+    logger.info(lm.get('fetching', { item: 'notifications' }));
+    try {
+        const notifications = await notificationApi.getViewableNotifications();
+        if (notifications.length === 0) {
+            logger.info(lm.get('notifications.none'));
+            return;
+        }
+        logger.info(lm.get('notifications.title'));
+        notifications.forEach((notif: any) => {
+            logger.info(`\n[${new Date(notif.createdAt).toLocaleString()}] - ${notif.message}`);
+        });
+    } catch (error: any) { /* The API layer handles logging */ }
+  }
+
+  public async start(): Promise<void> {
+    const choice = await this.prompts.forNotificationAction();
+    switch (choice) {
+      case lm.get('notifications.view'):
+        await this.handleView();
+        break;
+      case lm.get('notifications.configure'):
+        await this.handleConfigure();
+        break;
+      case lm.get('headlines.goBack'):
+        return;
+    }
+  }
+}

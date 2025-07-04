@@ -1,0 +1,5 @@
+{"isOperational":true,"level":"error","statusCode":404,"timestamp":"2025-07-04T09:29:42.748Z"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \" 68679e882f31f0ce13226738\" (type string) at path \"_id\" for model \"SavedArticle\"","name":"CastError","path":"_id","reason":{},"stringValue":"\" 68679e882f31f0ce13226738\"","value":" 68679e882f31f0ce13226738","valueType":"string"}
+{"isOperational":true,"level":"error","statusCode":404,"timestamp":"2025-07-04T12:19:36.640Z"}
+{"isOperational":true,"level":"error","statusCode":404,"timestamp":"2025-07-04T12:32:44.157Z"}
+{"kind":"ObjectId","message":"Cast to ObjectId failed for value \" \"promptSourceId\": \"Enter the Source ID to update:\",\" (type string) at path \"_id\" for model \"ExternalAPISource\"","name":"CastError","path":"_id","reason":{},"stringValue":"\" \"promptSourceId\": \"Enter the Source ID to update:\",\"","value":" \"promptSourceId\": \"Enter the Source ID to update:\",","valueType":"string"}

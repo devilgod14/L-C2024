@@ -1,22 +1,16 @@
-import api from './api.js';
 
-interface HeadlineFilters {
-  category?: string;
-  startDate?: string;
-  endDate?: string;
+import { HeadlineFilters, SearchFilters } from '../types/api.types';
+import { BaseApiService } from './baseApiservice';
+class NewsApi extends BaseApiService {
+  public async getHeadlines(filters: HeadlineFilters): Promise<any[]> {
+    const { data } = await this.api.get('/news/headlines', { params: filters });
+    return data;
+  }
+
+  public async searchArticles(filters: SearchFilters): Promise<any[]> {
+    const { data } = await this.api.get('/news/search', { params: filters });
+    return data;
+  }
 }
 
-interface SearchFilters extends HeadlineFilters {
-    query: string;
-    sortBy?: string;
-}
-
-export const getHeadlines = async (filters: HeadlineFilters) => {
-  const response = await api.get('/news/headlines', { params: filters });
-  return response.data;
-};
-
-export const searchArticles = async (filters: SearchFilters) => {
-    const response = await api.get('/news/search', { params: filters });
-    return response.data;
-};
+export default new NewsApi();

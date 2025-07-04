@@ -1,56 +1,69 @@
-import api from './api.js';
+import { BaseApiService } from "./baseApiservice";
 
-export const getSources = async () => {
-  const response = await api.get('/admin/sources');
-  return response.data;
-};
+class AdminApi extends BaseApiService {
+  // --- Source Management ---
+  public async getSources(): Promise<any[]> {
+    const { data } = await this.api.get('/admin/sources');
+    return data;
+  }
 
-export const addCategory = async (categoryName: string) => {
-  const response = await api.post('/admin/categories', { name: categoryName });
-  return response.data;
-};
+  public async getSourceDetails(sourceId: string): Promise<any> {
+    const { data } = await this.api.get(`/admin/sources/${sourceId}`);
+    return data;
+  }
 
-export const updateSourceApiKey = async (sourceId: string, apiKey: string) => {
-  const response = await api.put(`/admin/sources/${sourceId}`, { apiKey });
-  return response.data;
-};
+  public async updateSourceApiKey(sourceId: string, apiKey: string): Promise<any> {
+    const { data } = await this.api.put(`/admin/sources/${sourceId}`, { apiKey });
+    return data;
+  }
 
-export const getSourceDetails = async (sourceId: string) => {
-  const response = await api.get(`/admin/sources/${sourceId}`);
-  return response.data;
-};
+  // --- Category Management ---
+  public async addCategory(categoryName: string): Promise<any> {
+    const { data } = await this.api.post('/admin/categories', { name: categoryName });
+    return data;
+  }
 
-export const getReportedArticles = async () => {
-  const response = await api.get('/admin/reports');
-  return response.data;
-};
+  public async hideCategory(categoryId: string): Promise<any> {
+    const { data } = await this.api.put(`/admin/categories/${categoryId}/hide`);
+    return data;
+  }
 
-export const hideArticle = async (articleId: string) => {
-  const response = await api.put(`/admin/articles/${articleId}/hide`);
-  return response.data;
-};
+  public async unhideCategory(categoryId: string): Promise<any> {
+    const { data } = await this.api.put(`/admin/categories/${categoryId}/unhide`);
+    return data;
+  }
 
-export const hideCategory = async (categoryId: string) => {
-  const response = await api.put(`/admin/categories/${categoryId}/hide`);
-  return response.data;
-};
+  // --- Report & Article Moderation ---
+  public async getReportedArticles(): Promise<any[]> {
+    const { data } = await this.api.get('/admin/reports');
+    return data;
+  }
 
-export const unhideCategory = async (categoryId: string) => {
-  const response = await api.put(`/admin/categories/${categoryId}/unhide`);
-  return response.data;
-};
+  public async hideArticle(articleId: string): Promise<any> {
+    const { data } = await this.api.put(`/admin/articles/${articleId}/hide`);
+    return data;
+  }
 
-export const getBlockedKeywords = async () => {
-  const response = await api.get('/admin/keywords');
-  return response.data;
-};
+  public async unhideArticle(articleId: string): Promise<any> {
+    const { data } = await this.api.put(`/admin/articles/${articleId}/unhide`);
+    return data;
+  }
 
-export const addBlockedKeyword = async (keyword: string) => {
-  const response = await api.post('/admin/keywords', { keyword });
-  return response.data;
-};
+  // --- Blocked Keyword Management ---
+  public async getBlockedKeywords(): Promise<any[]> {
+    const { data } = await this.api.get('/admin/keywords');
+    return data;
+  }
 
-export const removeBlockedKeyword = async (keywordId: string) => {
-  const response = await api.delete(`/admin/keywords/${keywordId}`);
-  return response.data;
-};
+  public async addBlockedKeyword(keyword: string): Promise<any> {
+    const { data } = await this.api.post('/admin/keywords', { keyword });
+    return data;
+  }
+
+  public async removeBlockedKeyword(keywordId: string): Promise<any> {
+    const { data } = await this.api.delete(`/admin/keywords/${keywordId}`);
+    return data;
+  }
+}
+
+export default new AdminApi();

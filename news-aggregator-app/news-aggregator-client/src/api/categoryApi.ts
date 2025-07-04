@@ -1,6 +1,10 @@
-import api from './api.js';
+import { BaseApiService } from "./baseApiservice";
 
-export const getAllCategories = async () => {
-  const response = await api.get('/categories');
-  return response.data;
-};
+class CategoryApi extends BaseApiService {
+  public async getAll(): Promise<any[]> {
+    const { data } = await this.api.get('/categories');
+    return data;
+  }
+}
+
+export default new CategoryApi();

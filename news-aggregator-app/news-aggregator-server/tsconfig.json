@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "types": ["node", "jest"]
+  },
+  "include": [
+    "src/**/*.ts" // This tells TypeScript to compile everything inside the 'src' folder
+  ],
+  "exclude": [
+    "node_modules",
+    "src/__tests__" // We exclude the tests from the main build
+  ]
+}

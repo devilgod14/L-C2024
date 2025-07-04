@@ -1,26 +1,29 @@
-import api from './api.js';
+import { BaseApiService } from "./baseApiservice";
+class UserApi extends BaseApiService {
+  public async saveArticle(articleId: string): Promise<any> {
+    const { data } = await this.api.post('/users/me/saved-articles', { articleId });
+    return data;
+  }
 
-export const saveArticle = async (articleId: string) => {
-  const response = await api.post('/users/me/saved-articles', { articleId });
-  return response.data;
-};
+  public async getSavedArticles(): Promise<any[]> {
+    const { data } = await this.api.get('/users/me/saved-articles');
+    return data;
+  }
 
-export const getSavedArticles = async () => {
-  const response = await api.get('/users/me/saved-articles');
-  return response.data;
-};
+  public async deleteSavedArticle(savedArticleId: string): Promise<any> {
+    const { data } = await this.api.delete(`/users/me/saved-articles/${savedArticleId}`);
+    return data;
+  }
 
-export const deleteSavedArticle = async (savedArticleId: string) => {
-  const response = await api.delete(`/users/me/saved-articles/${savedArticleId}`);
-  return response.data;
-};
+  public async voteOnArticle(articleId: string, vote: 'like' | 'dislike'): Promise<any> {
+    const { data } = await this.api.post(`/articles/${articleId}/vote`, { vote });
+    return data;
+  }
 
-export const voteOnArticle = async (articleId: string, vote: 'like' | 'dislike') => {
-    const response = await api.post(`/articles/${articleId}/vote`, { vote });
-    return response.data;
-};
+  public async reportArticle(articleId: string): Promise<any> {
+    const { data } = await this.api.post(`/articles/${articleId}/report`);
+    return data;
+  }
+}
 
-export const reportArticle = async (articleId: string) => {
-  const response = await api.post(`/articles/${articleId}/report`);
-  return response.data;
-};
+export default new UserApi();
