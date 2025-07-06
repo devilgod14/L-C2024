@@ -7,7 +7,7 @@
     "start": "node \"D:\\L-C\\L-C2024\\news-aggregator-app\\news-aggregator-server\\dist\\app.js\"",
     "dev": "tsx watch src/app.ts",
     "build": "tsc",
-    "test": "jest --detectOpenHandles",
+    "test": "cross-env NODE_ENV=test jest --detectOpenHandles --forceExit",
     "seed": "node seeders/seed.js",
     "seed:destroy": "node seeders/seed.js -d"
   },
@@ -20,13 +20,10 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "jest": "^30.0.3",
     "jsonwebtoken": "^9.0.2",
-    "mongodb-memory-server": "^10.1.4",
     "mongoose": "^8.15.1",
     "node-cron": "^4.1.0",
-    "nodemailer": "^7.0.3",
-    "supertest": "^7.1.1"
+    "nodemailer": "^7.0.3"
   },
   "devDependencies": {
     "@types/bcryptjs": "^3.0.0",
@@ -38,7 +35,12 @@
     "@types/node": "^24.0.10",
     "@types/node-cron": "^3.0.11",
     "@types/nodemailer": "^6.4.17",
+    "@types/supertest": "^6.0.3",
+    "cross-env": "^7.0.3",
+    "jest": "^30.0.4",
+    "mongodb-memory-server": "^10.1.4",
     "nodemon": "^3.1.10",
+    "supertest": "^7.1.1",
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.3",

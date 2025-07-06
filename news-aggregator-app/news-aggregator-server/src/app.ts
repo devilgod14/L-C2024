@@ -64,7 +64,9 @@ class Server {
 
 // Start the server
 const server = new Server();
-server.start();
+if (process.env.NODE_ENV !== 'test') {
+  server.start();
+}
 
 // Export app for testing
 export default server.app;

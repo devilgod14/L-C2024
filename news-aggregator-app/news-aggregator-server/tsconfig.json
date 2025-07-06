@@ -11,10 +11,10 @@
     "types": ["node", "jest"]
   },
   "include": [
-    "src/**/*.ts" // This tells TypeScript to compile everything inside the 'src' folder
+    "src/**/*.ts" 
   ],
   "exclude": [
     "node_modules",
-    "src/__tests__" // We exclude the tests from the main build
+    "src/__tests__" 
   ]
 }
