@@ -122,6 +122,9 @@
   },
   "errors": {
     "generic": "An unknown error occurred.",
-    "apiError": "\n❌ Error: {message}"
+    "apiError": "\n❌ Error: {message}",
+    "validation": {
+      "required": "This field cannot be empty. Please provide a value."
+    }
   }
 }

@@ -1,5 +1,6 @@
 import inquirer from 'inquirer';
 import lm from '../utils/localizationManager';
+import { requiredInput } from '../utils/validator';
 
 export class NotificationPrompts {
   public async forNotificationAction(): Promise<string> {
@@ -29,6 +30,7 @@ export class NotificationPrompts {
       type: 'input',
       name: 'keywords',
       message: lm.get('notifications.keywordsPrompt'),
+      validate: requiredInput,
       default: currentSettings.keywords.join(', '),
     });
 

@@ -1,5 +1,6 @@
 import inquirer from 'inquirer';
 import lm from '../utils/localizationManager';
+import { requiredInput } from '../utils/validator';
 
 export class NewsPrompts {
   public async forDateOption(): Promise<string> {
@@ -11,7 +12,7 @@ export class NewsPrompts {
   }
 
   public async forDate(messageKey: 'promptStartDate' | 'promptEndDate'): Promise<string> {
-    const { date } = await inquirer.prompt([{ type: 'input', name: 'date', message: lm.get(`headlines.${messageKey}`) }]);
+    const { date } = await inquirer.prompt([{ type: 'input', name: 'date', message: lm.get(`headlines.${messageKey}`), validate: requiredInput }]);
     return date;
   }
 
@@ -24,7 +25,7 @@ export class NewsPrompts {
   }
 
   public async forSearchQuery(): Promise<string> {
-    const { query } = await inquirer.prompt([{ type: 'input', name: 'query', message: lm.get('search.promptQuery') }]);
+    const { query } = await inquirer.prompt([{ type: 'input', name: 'query', message: lm.get('search.promptQuery'), validate: requiredInput }]);
     return query;
   }
 

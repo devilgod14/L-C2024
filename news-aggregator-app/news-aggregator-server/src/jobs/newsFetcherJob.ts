@@ -5,6 +5,7 @@ import logger from '../config/logger';
 
 module.exports = () => {
   const schedule = '0 */4 * * *';
+  //const schedule = '* * * * *';
   logger.info(`Scheduling news fetch job with schedule: "${schedule}"`);
 
   cron.schedule(schedule, async () => {

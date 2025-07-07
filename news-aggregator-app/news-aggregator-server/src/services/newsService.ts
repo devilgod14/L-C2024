@@ -3,9 +3,13 @@ import newsRepository from '../repositories/newsRepository';
 import logger from '../config/logger';
 import { IArticle, HeadlineFilters, SearchFilters, IArticleDocument } from '../types/news.types';
 import recommendationService from './recommendationService';
+import { INewsApiStrategy } from './api-strategies/INewsApiStrategy';
+import { NewsApiStrategy } from './api-strategies/NewsApiStrategy';
+import { TheNewsApiStrategy } from './api-strategies/TheNewsApiStrategy';
 
 class NewsService {
   private categoryKeywords: Record<string, string[]>;
+  private strategies: Map<string, INewsApiStrategy>;
 
   constructor() {
     this.categoryKeywords = {
@@ -14,6 +18,9 @@ class NewsService {
       Business: ['stock', 'market', 'earnings', 'finance', 'economy', 'company', 'invest', 'shares'],
       Entertainment: ['movie', 'music', 'album', 'celebrity', 'film', 'television', 'actor'],
     };
+    this.strategies = new Map();
+    this.strategies.set('NewsAPI', new NewsApiStrategy());
+    this.strategies.set('The News API', new TheNewsApiStrategy());
   }
 
   private _categorizeByKeywords(textToScan: string): string {
@@ -26,37 +33,6 @@ class NewsService {
       }
     }
     return 'General';
-  }
-
-  private _normalizeArticle(article: any, sourceName: string): (Partial<IArticle> & { categoryName: string }) | null {
-    const sourceKey = sourceName.trim();
-    let normalized: Partial<IArticle> & { categoryName: string } = {
-        title: '', description: '', url: '', publishedAt: new Date(), categoryName: 'General'
-    };
-
-    if (sourceKey === 'NewsAPI') {
-      if (!article.title || !article.url || article.title === '[Removed]') return null;
-      normalized.title = article.title;
-      normalized.description = article.description || article.title;
-      normalized.url = article.url;
-      normalized.publishedAt = new Date(article.publishedAt);
-      normalized.categoryName = 'Business';
-    } else if (sourceKey === 'The News API') {
-      if (!article.title || !article.url) return null;
-      normalized.title = article.title;
-      normalized.description = article.snippet || article.description || article.title;
-      normalized.url = article.url;
-      normalized.publishedAt = new Date(article.published_at);
-      normalized.categoryName = article.categories.length > 0 ? article.categories[0] : 'General';
-    } else {
-        return null;
-    }
-
-    if (normalized.categoryName === 'General') {
-        const combinedText = `${normalized.title} ${normalized.description}`;
-        normalized.categoryName = this._categorizeByKeywords(combinedText);
-    }
-    return normalized;
   }
   
   private async _getBaseContentFilter(): Promise<any> {
@@ -133,31 +109,33 @@ class NewsService {
     const activeSources = await newsRepository.findActiveSources();
     const newArticleIds: any[] = [];
 
-    const endpoints: Record<string, (key: string) => string> = {
-      'NewsAPI': (key) => `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=${key}`,
-      'The News API': (key) => `https://api.thenewsapi.com/v1/news/top?api_token=${key}&locale=us&limit=3`
-    };
-
     for (const source of activeSources) {
-      const endpointFn = endpoints[source.name];
-      if (!endpointFn) continue;
+      const strategy = this.strategies.get(source.name);
+      if (!strategy) {
+        logger.warn(`No strategy found for source: ${source.name}`);
+        continue;
+      }
 
-      const url = endpointFn(source.apiKey);
-
+      const url = strategy.buildUrl(source);
       try {
         const response = await axios.get(url);
         const articles = source.name === 'NewsAPI' ? response.data.articles : response.data.data;
-        
+
         for (const rawArticle of articles) {
-            const normalizedArticle = this._normalizeArticle(rawArticle, source.name);
-            if (normalizedArticle && normalizedArticle.url) {
-                const category = await newsRepository.findOrCreateCategory(normalizedArticle.categoryName);
-                const articleData: any = { ...normalizedArticle, categoryId: category._id, sourceId: source._id };
-                const result = await newsRepository.updateArticleWithUpsert(articleData.url, articleData);
-                if (result.upsertedCount > 0 && result.upsertedId) {
-                    newArticleIds.push(result.upsertedId);
-                }
+          let normalizedArticle = strategy.normalizeResponse(rawArticle);
+          if (normalizedArticle && normalizedArticle.url) {
+            if (normalizedArticle.categoryName === 'General') {
+              const combinedText = `${normalizedArticle.title} ${normalizedArticle.description}`;
+              normalizedArticle.categoryName = this._categorizeByKeywords(combinedText);
             }
+
+            const category = await newsRepository.findOrCreateCategory(normalizedArticle.categoryName);
+            const articleData: Partial<IArticle> = { ...normalizedArticle, categoryId: category._id as any, sourceId: source._id as any };
+            const result = await newsRepository.updateArticleWithUpsert(articleData.url as any, articleData);
+            if (result.upsertedCount > 0 && result.upsertedId) {
+                newArticleIds.push(result.upsertedId);
+            }
+          }
         }
       } catch (error) {
         logger.error(`Failed to fetch from ${source.name}`, { error });

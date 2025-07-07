@@ -1,5 +1,6 @@
 import inquirer from 'inquirer';
 import lm from '../utils/localizationManager';
+import { requiredInput } from '../utils/validator';
 
 export class AdminMenuPrompts {
   public async main(): Promise<string> {
@@ -28,15 +29,15 @@ export class AdminMenuPrompts {
 
     public async forSourceId(action: string): Promise<string> {
     const { sourceId } = await inquirer.prompt({
-      type: 'input', name: 'sourceId', message: lm.get('adminMenu.promptSourceId', { action })
+      type: 'input', name: 'sourceId', message: lm.get('adminMenu.promptSourceId', { action }),validate: requiredInput
     });
     return sourceId;
   }
 
   public async forSourceUpdate(): Promise<{ sourceId: string, apiKey: string }> {
     return inquirer.prompt([
-      { type: 'input', name: 'sourceId', message: lm.get('admin.promptSourceId', { action: 'update' }) },
-      { type: 'input', name: 'apiKey', message: lm.get('admin.promptNewKey') },
+      { type: 'input', name: 'sourceId', message: lm.get('admin.promptSourceId', { action: 'update' }),validate: requiredInput },
+      { type: 'input', name: 'apiKey', message: lm.get('admin.promptNewKey'),validate: requiredInput },
     ]);
   }
 
@@ -50,7 +51,7 @@ export class AdminMenuPrompts {
 
   public async forArticleIdToHide(): Promise<string> {
     const { articleId } = await inquirer.prompt({
-        type: 'input', name: 'articleId', message: lm.get('admin.promptArticleId')
+        type: 'input', name: 'articleId', message: lm.get('admin.promptArticleId'),validate: requiredInput
     });
     return articleId;
   }
@@ -65,7 +66,7 @@ export class AdminMenuPrompts {
 
   public async forCategoryId(action: string): Promise<string> {
     const { categoryId } = await inquirer.prompt({
-      type: 'input', name: 'categoryId', message: lm.get('admin.promptCategoryId', { action })
+      type: 'input', name: 'categoryId', message: lm.get('admin.promptCategoryId', { action }),validate: requiredInput
     });
     return categoryId;
   }
@@ -82,17 +83,17 @@ export class AdminMenuPrompts {
   }
   
   public async forNewKeyword(): Promise<string> {
-    const { keyword } = await inquirer.prompt([{ type: 'input', name: 'keyword', message: lm.get('admin.promptNewKeyword') }]);
+    const { keyword } = await inquirer.prompt([{ type: 'input', name: 'keyword', message: lm.get('admin.promptNewKeyword'),validate: requiredInput }]);
     return keyword;
   }
 
   public async forKeywordIdToRemove(): Promise<string> {
-    const { keywordId } = await inquirer.prompt([{ type: 'input', name: 'keywordId', message: lm.get('admin.promptRemoveKeywordId') }]);
+    const { keywordId } = await inquirer.prompt([{ type: 'input', name: 'keywordId', message: lm.get('admin.promptRemoveKeywordId'),validate: requiredInput }]);
     return keywordId;
   }
 
   public async forNewCategory(): Promise<string> {
-    const { name } = await inquirer.prompt([{ type: 'input', name: 'name', message: lm.get('admin.promptNewCatName') }]);
+    const { name } = await inquirer.prompt([{ type: 'input', name: 'name', message: lm.get('admin.promptNewCatName'),validate: requiredInput }]);
     return name;
   }
 }

@@ -1,5 +1,6 @@
 import inquirer from 'inquirer';
 import lm from '../utils/localizationManager';
+import { requiredInput } from '../utils/validator';
 
 export class InteractionPrompts {
   public async forArticleAction(): Promise<string> {
@@ -22,7 +23,8 @@ export class InteractionPrompts {
     const { articleId } = await inquirer.prompt({
       type: 'input',
       name: 'articleId',
-      message: lm.get('articleActions.promptId', { action })
+      message: lm.get('articleActions.promptId', { action }),
+      validate: requiredInput
     });
     return articleId;
   }
@@ -41,7 +43,8 @@ export class InteractionPrompts {
     const { articleId } = await inquirer.prompt({
         type: 'input',
         name: 'articleId',
-        message: lm.get('saved.promptId')
+        message: lm.get('saved.promptId'),
+        validate: requiredInput
     });
     return articleId;
   }

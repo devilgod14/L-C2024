@@ -1,5 +1,6 @@
 import inquirer from 'inquirer';
 import lm from '../utils/localizationManager';
+import { requiredInput } from '../utils/validator';
 
 export class AuthPrompts {
   public async mainMenu(): Promise<string> {
@@ -11,15 +12,15 @@ export class AuthPrompts {
   }
   public async forSignup(): Promise<any> {
     return inquirer.prompt([
-      { type: 'input', name: 'username', message: lm.get('auth.promptUsername') },
-      { type: 'input', name: 'email', message: lm.get('auth.promptEmail') },
-      { type: 'password', name: 'password', message: lm.get('auth.promptPassword'), mask: '*' },
+      { type: 'input', name: 'username', message: lm.get('auth.promptUsername'), validate: requiredInput },
+      { type: 'input', name: 'email', message: lm.get('auth.promptEmail'), validate: requiredInput },
+      { type: 'password', name: 'password', message: lm.get('auth.promptPassword'), validate: requiredInput, mask: '*' },
     ]);
   }
   public async forLogin(): Promise<any> {
     return inquirer.prompt([
-      { type: 'input', name: 'email', message: lm.get('auth.promptEmail') },
-      { type: 'password', name: 'password', message: lm.get('auth.promptPassword'), mask: '*' },
+      { type: 'input', name: 'email', message: lm.get('auth.promptEmail'), validate: requiredInput },
+      { type: 'password', name: 'password', message: lm.get('auth.promptPassword'), validate: requiredInput, mask: '*' },
     ]);
   }
 }

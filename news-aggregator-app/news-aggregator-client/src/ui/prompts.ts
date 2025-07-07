@@ -1,4 +1,5 @@
 import inquirer from 'inquirer';
+import { requiredInput } from '../utils/validator';
 
 export const promptMainMenu = async () : Promise<string>  => {
   const { choice } = await inquirer.prompt([
@@ -15,9 +16,9 @@ export const promptMainMenu = async () : Promise<string>  => {
 export const promptForSignup = async () => {
   console.log('\n--- Create a New Account ---');
   const answers = await inquirer.prompt([
-    { type: 'input', name: 'username', message: 'Enter a username:' },
-    { type: 'input', name: 'email', message: 'Enter your email address:' },
-    { type: 'password', name: 'password', message: 'Enter a password:', mask: '*' },
+    { type: 'input', name: 'username', message: 'Enter a username:', validate: requiredInput },
+    { type: 'input', name: 'email', message: 'Enter your email address:', validate: requiredInput },
+    { type: 'password', name: 'password', message: 'Enter a password:', validate: requiredInput, mask: '*' },
   ]);
   return answers;
 };
@@ -25,8 +26,8 @@ export const promptForSignup = async () => {
 export const promptForLogin = async () => {
   console.log('\n--- Please Login ---');
   const answers = await inquirer.prompt([
-    { type: 'input', name: 'email', message: 'Enter your email address:' },
-    { type: 'password', name: 'password', message: 'Enter a password:', mask: '*' },
+    { type: 'input', name: 'email', message: 'Enter your email address:' , validate: requiredInput},
+    { type: 'password', name: 'password', message: 'Enter a password:', mask: '*', validate: requiredInput },
   ]);
   return answers;
 };
@@ -86,6 +87,7 @@ export const promptForDate = async (message: string): Promise<string> => {
       type: 'input',
       name: 'date',
       message: message,
+      validate: requiredInput
     },
   ]);
   return date;
@@ -127,6 +129,7 @@ export const promptForArticleId = async (message: string): Promise<string> => {
       type: 'input',
       name: 'articleId',
       message: message,
+      validate: requiredInput
     },
   ]);
   return articleId;
@@ -150,6 +153,7 @@ export const promptForSavedArticleIdToDelete = async (): Promise<string> => {
       type: 'input',
       name: 'articleId',
       message: 'Enter the Saved Article ID you wish to delete:',
+      validate: requiredInput
     },
   ]);
   return articleId;
@@ -185,6 +189,7 @@ export const promptToConfigureNotifications = async (currentSettings: any, allCa
       type: 'input',
       name: 'keywords',
       message: 'Enter keywords to follow (comma-separated):',
+      validate: requiredInput,
       default: currentSettings.keywords.join(', '),
     }
   ]);
@@ -201,6 +206,7 @@ export const promptForSearchQuery = async (): Promise<string> => {
       type: 'input',
       name: 'query',
       message: 'Enter your search query:',
+      validate: requiredInput
     },
   ]);
   return query;
@@ -224,14 +230,14 @@ export const promptForSortOption = async (): Promise<string> => {
 
 export const promptForSourceUpdate = async (): Promise<{ sourceId: string, apiKey: string }> => {
   return inquirer.prompt([
-    { type: 'input', name: 'sourceId', message: 'Enter the Source ID to update:' },
-    { type: 'input', name: 'apiKey', message: 'Enter the new API Key:' },
+    { type: 'input', name: 'sourceId', message: 'Enter the Source ID to update:', validate: requiredInput },
+    { type: 'input', name: 'apiKey', message: 'Enter the new API Key:', validate: requiredInput },
   ]);
 };
 
 export const promptForNewCategory = async (): Promise<string> => {
     const { name } = await inquirer.prompt([
-      { type: 'input', name: 'name', message: 'Enter the new category name:'}
+      { type: 'input', name: 'name', message: 'Enter the new category name:', validate: requiredInput}
     ]);
     return name;
 };
@@ -250,7 +256,7 @@ export const promptAdminAfterSources = async (): Promise<string> => {
 
 export const promptForSourceId = async (message: string): Promise<string> => {
     const { sourceId } = await inquirer.prompt([
-        { type: 'input', name: 'sourceId', message: message }
+        { type: 'input', name: 'sourceId', message: message, validate: requiredInput }
     ]);
     return sourceId;
 };
@@ -269,7 +275,7 @@ export const promptForReportAction = async (): Promise<string> => {
 
 export const promptForArticleIdToHide = async (): Promise<string> => {
     const { articleId } = await inquirer.prompt([
-        { type: 'input', name: 'articleId', message: 'Enter the Article ID to HIDE:'}
+        { type: 'input', name: 'articleId', message: 'Enter the Article ID to HIDE:', validate: requiredInput}
     ]);
     return articleId;
 };
@@ -288,7 +294,7 @@ export const promptForCategoryManagement = async (): Promise<string> => {
 
 export const promptForCategoryId = async (message: string): Promise<string> => {
     const { categoryId } = await inquirer.prompt([
-        { type: 'input', name: 'categoryId', message: message }
+        { type: 'input', name: 'categoryId', message: message, validate: requiredInput }
     ]);
     return categoryId;
 };
@@ -307,14 +313,14 @@ export const promptForKeywordManagement = async (): Promise<string> => {
 
 export const promptForNewKeyword = async (): Promise<string> => {
     const { keyword } = await inquirer.prompt([
-        { type: 'input', name: 'keyword', message: 'Enter the keyword to block:' }
+        { type: 'input', name: 'keyword', message: 'Enter the keyword to block:', validate: requiredInput }
     ]);
     return keyword;
 };
 
 export const promptForKeywordIdToRemove = async (): Promise<string> => {
     const { keywordId } = await inquirer.prompt([
-        { type: 'input', name: 'keywordId', message: 'Enter the ID of the keyword to remove:' }
+        { type: 'input', name: 'keywordId', message: 'Enter the ID of the keyword to remove:', validate: requiredInput }
     ]);
     return keywordId;
 };

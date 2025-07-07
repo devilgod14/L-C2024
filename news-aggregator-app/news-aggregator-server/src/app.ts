@@ -50,7 +50,7 @@ class Server {
     try {
        await databaseService.connect();
       await emailService.initialize();
-      require('./jobs/newsFetcherJob'); // Start the cron job
+      require('./jobs/newsFetcherJob')(); // Start the cron job
 
       this.app.listen(this.port, () => {
         logger.info(`Server is running on port ${this.port}`);

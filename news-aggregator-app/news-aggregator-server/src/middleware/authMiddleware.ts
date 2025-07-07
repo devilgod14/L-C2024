@@ -1,19 +1,24 @@
-import { Response, NextFunction } from 'express';
+import { Response, NextFunction, Request } from 'express';
 import jwt from 'jsonwebtoken';
 import userRepository from '../repositories/userRepository';
-import { Request } from 'express'; 
+import { DecodedToken } from '../types/auth.types';
 import { UnauthorizedError } from '../utils/error';
 
 class AuthMiddleware {
   public isAuthenticated = async (req: Request, res: Response, next: NextFunction) => {
     let token;
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-      token = req.headers.authorization.split(' ')[1];
-      const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
-      req.user = await userRepository.findById(decoded.user.id);
-      return next();
-    }
 
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      try {
+        token = req.headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as DecodedToken;
+        req.user = await userRepository.findById(decoded.user.id);
+
+        return next();
+      } catch (error) {
+        throw new UnauthorizedError('Not authorized, token failed');
+      }
+    }
     throw new UnauthorizedError('Not authorized, no token');
   };
 
